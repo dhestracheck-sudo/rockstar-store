@@ -42,7 +42,8 @@
   .star {
     position:absolute; border-radius:50%;
     background: #cfe3ff;
-    animation: twinkle 3s ease-in-out infinite;
+    /* kedip terbatas: cantik saat muat, lalu diam (CPU 0, visual lengkap cepat) */
+    animation: twinkle 3s ease-in-out 1;
   }
   .star.glow-blue { background:#4dabf7; box-shadow:0 0 10px 3px rgba(77,171,247,.8); }
   .star.glow-gold { background:#ffd43b; box-shadow:0 0 10px 3px rgba(255,212,59,.75); }
@@ -212,7 +213,7 @@
       var glow = Math.random()<0.18 ? (Math.random()<0.6?' glow-blue':' glow-gold') : '';
       var size = glow ? (3+Math.random()*4) : (1+Math.random()*2);
       d.className += glow;
-      d.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;animation-delay:'+(Math.random()*3)+'s;animation-duration:'+(2.2+Math.random()*2.5)+'s;';
+      d.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;animation-delay:'+(Math.random()*1.5)+'s;animation-duration:'+(0.8+Math.random()*0.8)+'s;';
       s.appendChild(d);
     }
   });
