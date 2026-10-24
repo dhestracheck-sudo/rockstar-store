@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JASA JOKI — Rockstar Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Font tidak lagi menahan render awal: CSS dimuat asinkron, teks pertama
+     tampil dengan font sistem lalu bertukar ke Poppins/Baloo 2 (display=swap). -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700;800&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --navy-deep: #070b26;
+    --navy-panel: #0d1540;
+    --gold-1: #f9dc7f; --gold-2: #f3b53a; --gold-3: #b4762d;
+    --text: #e8edff;
+  }
+  body {
+    font-family: 'Poppins', system-ui, sans-serif;
+    background:
+      radial-gradient(1200px 700px at 50% -10%, rgba(43,66,160,.35), transparent 60%),
+      radial-gradient(900px 500px at 85% 110%, rgba(30,40,110,.4), transparent 60%),
+      var(--navy-deep);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ====== LATAR BINTANG + POLIGON ====== */
+  .bg { position: fixed; inset:0; pointer-events:none; z-index:0; }
+  .bg .stars { position:absolute; inset:0; }
+  .star {
+    position:absolute; border-radius:50%;
+    background: #cfe3ff;
+    animation: twinkle 3s ease-in-out infinite;
+  }
+  .star.glow-blue { background:#4dabf7; box-shadow:0 0 10px 3px rgba(77,171,247,.8); }
+  .star.glow-gold { background:#ffd43b; box-shadow:0 0 10px 3px rgba(255,212,59,.75); }
+  @keyframes twinkle { 0%,100%{ opacity:.25; transform:scale(.8);} 50%{ opacity:1; transform:scale(1.15);} }
+
+  /* garis poligon / wireframe samar */
+  .bg::after {
+    content:""; position:absolute; inset:0;
+    background:
+      repeating-radial-gradient(circle at -10% -20%, transparent 0 78px, rgba(246,196,83,.06) 78px 80px),
+      repeating-radial-gradient(circle at 110% 30%, transparent 0 95px, rgba(140,170,255,.05) 95px 97px);
+    mask-image: linear-gradient(180deg, rgba(0,0,0,.9), transparent 70%);
+  }
+
+  /* ====== WRAPPER ====== */
+  .wrap { position:relative; z-index:1; max-width: 640px; margin:0 auto; padding:22px 16px 40px; }
+
+  /* ====== HEADER / HERO ====== */
+  .hero {
+    text-align:center;
+    /* blur dihapus (berat di HP): latar diganti gelap solid, tampilan sedikit lebih solid */
+    background: linear-gradient(180deg, #101842, #090d28);
+    border: 1px solid rgba(95,115,210,.28);
+    border-radius: 26px;
+    padding: 30px 18px 24px;
+    box-shadow: 0 12px 44px rgba(0,0,0,.5), inset 0 0 46px rgba(35,55,140,.28);
+  }
+  .hero h1 {
+    font-family:'Baloo 2', 'Poppins', sans-serif;
+    font-weight:800;
+    font-size: clamp(34px, 9vw, 54px);
+    line-height: 1.05;
+    letter-spacing: 1px;
+    display:inline-block;
+    padding: 6px 26px 10px;
+    border-radius: 20px;
+    background: radial-gradient(120% 160% at 50% 0%, rgba(9,13,40,.92), rgba(6,9,30,.86));
+    box-shadow: 0 4px 18px rgba(0,0,0,.45);
+  }
+  .hero h1 .jasa {
+    background: linear-gradient(180deg, #ffe066, #f5a623);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter: drop-shadow(0 3px 4px rgba(0,0,0,.55));
+  }
+  .hero h1 .joki { color:#fff; text-shadow: 0 3px 5px rgba(0,0,0,.55); }
+  .hero p {
+    max-width: 480px; margin: 16px auto 0;
+    background: rgba(11,17,48,.5);
+    border: 1px solid rgba(95,115,210,.18);
+    border-radius: 16px;
+    padding: 12px 20px;
+    font-size: 15px; color:#dfe6ff; line-height:1.55;
+  }
+  .hero p .sepuh {
+    color:#ffd43b; font-weight:700;
+    text-shadow: 0 0 12px rgba(255,212,59,.4);
+  }
+
+  /* ====== KARTU LAYANAN ====== */
+  .cards {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    position:relative;
+    border-radius: 18px;
+    padding: 3px; /* rangka emas */
+    background:
+      linear-gradient(140deg, var(--gold-1), var(--gold-3) 32%, var(--gold-1) 50%, #7a4d1f 72%, var(--gold-1) 92%);
+    box-shadow: 0 10px 26px rgba(0,0,0,.55), 0 0 0 1px rgba(246,196,83,.25);
+    text-decoration:none; color:#fff;
+    display:block;
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(0,0,0,.6), 0 0 0 1px rgba(246,196,83,.45); }
+  .card-inner {
+    position:relative; overflow:hidden;
+    border-radius: 15px;
+    aspect-ratio: 117/190;
+    background:#0b1130;
+    display:flex; flex-direction:column; justify-content:flex-end; align-items:center;
+    text-align:center;
+  }
+  .card-img {
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:center;
+  }
+  .card-art { /* placeholder bila belum ada gambar */
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 44px; opacity:.9;
+  }
+  .card-inner::after { /* gelapkan bawah supaya teks jelas */
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(5,8,25,.05) 35%, rgba(5,8,25,.82) 78%);
+  }
+  .card-name {
+    position:relative; z-index:2;
+    font-weight:800; text-transform:uppercase;
+    font-size: clamp(15px, 3.4vw, 19px);
+    line-height:1.25; letter-spacing:.5px;
+    text-shadow: 0 2px 6px rgba(0,0,0,.8);
+    padding: 0 8px;
+  }
+  .card-badge {
+    position:relative; z-index:2;
+    margin: 10px 0 12px;
+    font-size: 12px; font-weight:600; color:#fff;
+    background: #0b1130;
+    border: 1.5px solid rgba(255,255,255,.35);
+    border-radius: 999px;
+    padding: 6px 16px;
+  }
+  .card-badge.habis { border-color: rgba(255,120,120,.6); color:#ffb3b3; }
+
+  footer { margin-top: 18px; text-align:center; font-size:12px; color: rgba(190,205,255,.45); }
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <div class="stars" id="stars"></div>
+</div>
+
+<div class="wrap">
+
+  <!-- ================= HEADER KATALOG JASA JOKI ================= -->
+  <header class="hero">
+    <h1><span class="jasa">JASA</span> <span class="joki">JOKI</span></h1>
+    <p>Layanan joki profesional, cepat, dan aman untuk menjadi <span class="sepuh">sepuh</span> game favoritmu dan mendominasi permainan.</p>
+  </header>
+
+  <!-- Kartu layanan — isi otomatis dari SERVICES di bawah -->
+  <div class="cards" id="cards"></div>
+
+  <footer>Powered by Rockstar Store</footer>
+</div>
+
+<script>
+/* ====== BINTANG DILATAR (otomatis) ======
+   Animasi dekoratif dimatikan otomatis di HP lemah
+   (RAM <= 4 GB atau CPU <= 4 inti) dan untuk pengguna yang
+   meminta gerak minimal  ->  halaman diam = beban 0. */
+(function(){
+  var lemah =
+    (navigator.deviceMemory && navigator.deviceMemory <= 4) ||
+    (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
+  var kurangGerak = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (lemah || kurangGerak) return;
+
+  var s = document.getElementById('stars'), n = 55;
+  for (var i=0;i<n;i++){
+    var d = document.createElement('div');
+    d.className = 'star';
+    var glow = Math.random()<0.18 ? (Math.random()<0.6?' glow-blue':' glow-gold') : '';
+    var size = glow ? (3+Math.random()*4) : (1+Math.random()*2);
+    d.className += glow;
+    d.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;animation-delay:'+(Math.random()*3)+'s;animation-duration:'+(2.2+Math.random()*2.5)+'s;';
+    s.appendChild(d);
+  }
+})();
+
+/* ====== DATA LAYANAN ======
+   Ganti image dengan URL gambar kamu (link Drive: pakai format
+   https://drive.google.com/thumbnail?id=FILE_ID&sz=w400 )        */
+const SERVICES = [
+  {
+    name: 'UNLOCK CHAT & VOICE ACCOUNT',
+    emoji: '🎙️', artBg: 'linear-gradient(150deg,#0f2d1c,#123a24 45%,#071a10)',
+    image: '',
+    available: true          // false = tampil "Sold Out"
+  },
+  {
+    name: 'MOBILE LEGENDS',
+    emoji: '🛡️', artBg: 'linear-gradient(150deg,#1a1f4d,#2b2560 50%,#0c1030)',
+    image: '',
+    available: true
+  }
+];
+
+function esc(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function render(list){
+  document.getElementById('cards').innerHTML = list.map(x => `
+    <a class="card" href="#${esc(x.name)}">
+      <div class="card-inner">
+        ${ x.image
+            ? `<img class="card-img" src="${esc(x.image)}" alt="${esc(x.name)}" loading="lazy">`
+            : `<div class="card-art" style="background:${x.artBg}">${x.emoji||'🎮'}</div>` }
+        <div class="card-name">${esc(x.name)}</div>
+        <div class="card-badge ${x.available===false?'habis':''}">${x.available===false?'Sold Out':'Tersedia Layanan'}</div>
+      </div>
+    </a>`).join('');
+}
+render(SERVICES);
+
+/* ====== OPSIONAL: ISI OTOMATIS DARI GOOGLE SHEET ======
+   Paste URL /exec Apps Script kamu (Code-rockstar-FINAL.gs), contoh:
+   const SHEET_URL = "https://script.google.com/macros/s/XXX/exec";
+   Lalu kategori "CAT:..." di Sheet otomatis jadi kartu.           */
+const SHEET_URL = ""; // biarkan kosong untuk pakai data di atas manually
+if (SHEET_URL) {
+  window.__jokiCb = (rows) => {
+    render(rows.filter(r => r && String(r.name||'').startsWith('CAT:')).map(r => ({
+      name: String(r.name).replace(/^CAT:/,'').toUpperCase(),
+      image: r.image || '',
+      available: String(r.soldout||'').toUpperCase() !== 'YA'
+    })));
+  };
+  const sc = document.createElement('script');
+  sc.src = SHEET_URL + (SHEET_URL.includes('?')?'&':'?') + 'callback=__jokiCb';
+  document.head.appendChild(sc);
+}
+</script>
+</body>
+</html>

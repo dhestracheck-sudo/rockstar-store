@@ -1,0 +1,6 @@
+# Repo ini khusus deploy situs ke GitHub Pages.
+# Semua file lain di folder proyek sengaja tidak ikut.
+/*
+!/.gitignore
+!/index.html
+!/_headers
