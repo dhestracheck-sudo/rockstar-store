@@ -4,15 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JASA JOKI — Rockstar Store</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Font tidak lagi menahan render awal: CSS dimuat asinkron, teks pertama
-     tampil dengan font sistem lalu bertukar ke Poppins/Baloo 2 (display=swap). -->
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700;800&display=swap">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
+<!-- Font di-host sendiri (folder fonts/): tanpa domain Google, unduhan
+     paralel dari alamat yang sama dengan situsmu. Preload 3 font yang tampil
+     pada muat pertama; Poppins 700 (kata "sepuh") diunduh prosa biasa. -->
+<link rel="preload" as="font" type="font/woff2" href="fonts/baloo2-800.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/poppins-400.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/poppins-800.woff2" crossorigin>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
+
+  /* ====== FONT SELF-HOST (subset latin, display=swap) ====== */
+  @font-face { font-family:'Baloo 2'; font-style:normal; font-weight:800; font-display:swap; src:url('fonts/baloo2-800.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family:'Poppins'; font-style:normal; font-weight:400; font-display:swap; src:url('fonts/poppins-400.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family:'Poppins'; font-style:normal; font-weight:700; font-display:swap; src:url('fonts/poppins-700.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+  @font-face { font-family:'Poppins'; font-style:normal; font-weight:800; font-display:swap; src:url('fonts/poppins-800.woff2') format('woff2'); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
   :root {
     --navy-deep: #070b26;
     --navy-panel: #0d1540;
@@ -42,13 +48,15 @@
   .star.glow-gold { background:#ffd43b; box-shadow:0 0 10px 3px rgba(255,212,59,.75); }
   @keyframes twinkle { 0%,100%{ opacity:.25; transform:scale(.8);} 50%{ opacity:1; transform:scale(1.15);} }
 
-  /* garis poligon / wireframe samar */
-  .bg::after {
+  /* garis poligon / wireframe samar
+     Diringankan: mask-image dihapus (paint berat di HP), dan dekorasi
+     ini hanya ditambahkan lewat JS di perangkat yang terdeteksi kuat. */
+  .bg.berdekorasi::after {
     content:""; position:absolute; inset:0;
+    opacity:.6;
     background:
-      repeating-radial-gradient(circle at -10% -20%, transparent 0 78px, rgba(246,196,83,.06) 78px 80px),
-      repeating-radial-gradient(circle at 110% 30%, transparent 0 95px, rgba(140,170,255,.05) 95px 97px);
-    mask-image: linear-gradient(180deg, rgba(0,0,0,.9), transparent 70%);
+      repeating-radial-gradient(circle at -10% -20%, transparent 0 78px, rgba(246,196,83,.08) 78px 80px),
+      repeating-radial-gradient(circle at 110% 30%, transparent 0 95px, rgba(140,170,255,.07) 95px 97px);
   }
 
   /* ====== WRAPPER ====== */
@@ -62,7 +70,7 @@
     border: 1px solid rgba(95,115,210,.28);
     border-radius: 26px;
     padding: 30px 18px 24px;
-    box-shadow: 0 12px 44px rgba(0,0,0,.5), inset 0 0 46px rgba(35,55,140,.28);
+    box-shadow: 0 10px 30px rgba(0,0,0,.45);
   }
   .hero h1 {
     font-family:'Baloo 2', 'Poppins', sans-serif;
@@ -159,7 +167,7 @@
 </head>
 <body>
 
-<div class="bg">
+<div class="bg" id="bg">
   <div class="stars" id="stars"></div>
 </div>
 
@@ -189,16 +197,25 @@
   var kurangGerak = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (lemah || kurangGerak) return;
 
-  var s = document.getElementById('stars'), n = 55;
-  for (var i=0;i<n;i++){
-    var d = document.createElement('div');
-    d.className = 'star';
-    var glow = Math.random()<0.18 ? (Math.random()<0.6?' glow-blue':' glow-gold') : '';
-    var size = glow ? (3+Math.random()*4) : (1+Math.random()*2);
-    d.className += glow;
-    d.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;animation-delay:'+(Math.random()*3)+'s;animation-duration:'+(2.2+Math.random()*2.5)+'s;';
-    s.appendChild(d);
-  }
+  /* perangkat kuat: dekorasi latar dipasang sekarang, tapi bintang
+     dibuat SETELAH paint pertama supaya tidak menahan tampilan (FCP). */
+  document.getElementById('bg').classList.add('berdekorasi');
+  var setelah = window.requestAnimationFrame
+    ? function(f){ requestAnimationFrame(function(){ setTimeout(f, 60); }); }
+    : function(f){ setTimeout(f, 120); };
+
+  setelah(function(){
+    var s = document.getElementById('stars'), n = 55;
+    for (var i=0;i<n;i++){
+      var d = document.createElement('div');
+      d.className = 'star';
+      var glow = Math.random()<0.18 ? (Math.random()<0.6?' glow-blue':' glow-gold') : '';
+      var size = glow ? (3+Math.random()*4) : (1+Math.random()*2);
+      d.className += glow;
+      d.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;animation-delay:'+(Math.random()*3)+'s;animation-duration:'+(2.2+Math.random()*2.5)+'s;';
+      s.appendChild(d);
+    }
+  });
 })();
 
 /* ====== DATA LAYANAN ======
